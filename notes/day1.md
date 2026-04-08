@@ -10,6 +10,17 @@
 
 ## 关键代码片段
 
+### 项目结构
+- `src`
+  - `app.controller.ts`：控制器，定义路由和处理函数
+  - `app.module.ts`：根模块，组织控制器、服务、其他模块
+  - `app.service.ts`：服务，编写业务逻辑
+  - `main.ts`：应用入口文件，创建 Nest 应用实例
+  - `app.controller.spec.ts`：单元测试示例（暂时忽略）
+- `test`
+  - `app.e2e-spec.ts`：端到端测试示例
+  - `test.ts`：Jest 配置文件
+
 ### 原生 HTTP 服务
 ```js
 const http = require('http');
