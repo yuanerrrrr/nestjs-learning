@@ -1,38 +1,46 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
+import { InjectRepository } from "@nestjs/typeorm"; // 用于注入 TypeORM 的数据库仓库
+import { User } from "./users.entity";
+import { Repository } from "typeorm"; // TypeORM 的仓库类，提供数据库操作方法
 
 @Injectable()
 export class UserService {
-    private users: any[] = [];
-    private idCounter = 1;
+    constructor(
+        @InjectRepository(User)
+        private usersRepository: Repository<User>,
+    ) {}
 
-    createUser(createUserDto: CreateUserDto) {
-        const newUser = { id: this.idCounter++, ...createUserDto };
-        this.users.push(newUser);
-        return newUser;
+    createUser(createUserDto: CreateUserDto): Promise<User> {
+        const user = this.usersRepository.create(createUserDto);
+        return this.usersRepository.save(user);
     }
 
-    findAll() {
-        return this.users;
+    findAll(): Promise<User[]> {
+        return this.usersRepository.find();
     }
 
-    findOne(id: number) {
-        const data = this.users.find(user => user.id === id);
+    async findOne(id: number): Promise<User> {
+        const data = await this.usersRepository.findOneBy({id});
+        if (!data) {
+            throw new NotFoundException(`User with ID ${id} not found`);
+        }
         return data;
     }
 
-    update(id: number, updateUserDto: UpdateUserDto) {
-        const user = this.findOne(id);
-        if (!user) return null;
-        Object.assign(user, updateUserDto);
-        return user;
+    async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+        const user = await this.usersRepository.update(id, updateUserDto);
+        if (user.affected === 0) {
+            throw new NotFoundException(`User with ID ${id} not found`);
+        }
+        return this.findOne(id);
     }
 
-    remove(id: number) {
-        const index = this.users.findIndex(user => user.id === id);
-        if (index === -1) return null;
-        this.users.splice(index, 1);
-        return true;
+    async remove(id: number): Promise<void> {
+        const deleteResult = await this.usersRepository.delete(id);
+        if (deleteResult.affected === 0) {
+            throw new NotFoundException(`User with ID ${id} not found`);
+        }
     }
 }
