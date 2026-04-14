@@ -254,46 +254,6 @@ export class UserService {
 | `count()` | 统计记录数 | `await repo.count()` |
 | `createQueryBuilder()` | 复杂查询构建器 | `await repo.createQueryBuilder('user').where('user.age > :age', { age: 18 })` |
 
-## 控制器代码
-`src/users/users.controller.ts` 无需修改，保持与 Day 3 一致：
-
-```ts
-import { Controller, Post, Body, Get, Param, Put, Delete, ParseIntPipe } from "@nestjs/common";
-import { UserService } from "./users.service";
-import { CreateUserDto } from "./dto/create-user.dto";
-import { UpdateUserDto } from "./dto/update-user.dto";
-
-@Controller('users')
-export class UsersController {
-    constructor(private readonly userService: UserService) {}
-
-    @Post() 
-    create(@Body() createUserDto: CreateUserDto) {
-        return this.userService.createUser(createUserDto);
-    }
-
-    @Get()
-    findAll() {
-        return this.userService.findAll();
-    }
-
-    @Get(':id')
-    findOne(@Param('id', ParseIntPipe) id: number) {
-        return this.userService.findOne(id);
-    }
-
-    @Put(':id')
-    update(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDto) {
-        return this.userService.update(id, updateUserDto);
-    }
-
-    @Delete(':id')
-    remove(@Param('id', ParseIntPipe) id: number) {
-        return this.userService.remove(id);
-    }
-}
-```
-
 ## 测试接口
 
 ### 1. 启动应用
