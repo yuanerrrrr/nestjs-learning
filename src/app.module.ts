@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { DmeoModule } from './demo/dmeo.module';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -20,7 +21,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       logging: true,               // 打印 SQL 日志，方便调试
     }),
     DmeoModule,
-    UsersModule
+    UsersModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],
