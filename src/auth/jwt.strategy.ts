@@ -1,14 +1,15 @@
 import { Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { Strategy, ExtractJwt } from "passport-jwt";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-    constructor() {
+    constructor(private configService: ConfigService) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             ignoreExpiration: false,
-            secretOrKey: 'your-secret-key', // 必须与 JwtModule 注册时的 secret 一致
+            secretOrKey: configService.getOrThrow<string>('JWT_SECRET'), // 必须与 JwtModule 注册时的 secret 一致
         });
     }
 

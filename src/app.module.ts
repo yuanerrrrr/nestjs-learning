@@ -5,16 +5,22 @@ import { DmeoModule } from './demo/dmeo.module';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
+import { TasksModule } from './tasks/tasks.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      envFilePath: '.env', // 指定环境变量文件路径
+      isGlobal: true,      // 全局配置，所有模块均可访问
+    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
+      host: process.env.DB_HOST || 'localhost',
       port: 5432,
-      username: 'lisiyuan04',
-      password: '',
-      database: 'nest_demo',
+      username: process.env.DB_USERNAME || 'lisiyuan04',
+      password: process.env.DB_PASSWORD || '',
+      database: process.env.DB_DATABASE || 'nest_demo',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       autoLoadEntities: true,
       synchronize: true,           // 开发环境自动同步表结构
@@ -22,7 +28,8 @@ import { AuthModule } from './auth/auth.module';
     }),
     DmeoModule,
     UsersModule,
-    AuthModule
+    AuthModule,
+    TasksModule
   ],
   controllers: [AppController],
   providers: [AppService],
