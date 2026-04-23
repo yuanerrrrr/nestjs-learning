@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Task, TaskStatus } from './task.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -20,16 +20,28 @@ export class TasksService {
         return this.tasksRepository.save(task);
     }
 
-    async findAllByUser(userId: number): Promise<Task[]> {
-        return this.tasksRepository.find({
+    async findAllByUser(userId: number, page: number = 1, limit: number = 10): Promise<{
+        items: Task[];
+        total: number;
+        page: number;
+        limit: number;
+    }> {
+        const [items, total] = await this.tasksRepository.findAndCount({
             where: {
                 user: {id: userId}, // 查询指定用户的所有任务
             },
-            relations: ['user'],    // 预加载 user 关联数据
             order: {
                 created_at: 'DESC', // 默认按创建时间降序排序
             },
+            skip: (page - 1) * limit, // 跳过 (page - 1) * limit 条记录
+            take: limit, // 每页 limit 条记录
         });
+        return {
+            items,
+            total,
+            page,
+            limit,
+        };
     }
 
     async findOneByUser(userId: number, taskId: number): Promise<Task> {
@@ -41,7 +53,7 @@ export class TasksService {
             relations: ['user'], // 预加载 user 关联数据
         });
         if (!task) {
-            throw new Error('Task not found');
+            throw new NotFoundException(`Task with ID ${taskId} not found`);
         }
         return task;
     }

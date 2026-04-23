@@ -1,6 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { TransformInterceptor } from './common/interceptors/transform.interceptor';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import { LoggingIntercptor } from './common/interceptors/logging.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -11,6 +14,10 @@ async function bootstrap() {
       transform: true,                // 自动将路径参数/查询参数转换为 DTO 定义的类型
     }),
   );
+  // 注册全局拦截器，统一处理返回格式
+  app.useGlobalInterceptors(new TransformInterceptor(), new LoggingIntercptor());
+  // 注册全局异常过滤器，统一处理异常
+  app.useGlobalFilters(new HttpExceptionFilter());
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

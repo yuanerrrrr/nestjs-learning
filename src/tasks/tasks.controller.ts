@@ -4,6 +4,7 @@ import { TasksService } from './tasks.service';
 import { Task, TaskStatus } from './task.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { PaginationDto } from './dto/pagination.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { ParseIntPipe } from '@nestjs/common';
 
@@ -19,8 +20,12 @@ export class TasksController {
     }
 
     @Get()
-    findAll(@Request() req): Promise<Task[]> {
-        return this.tasksService.findAllByUser(req.user.userId);
+    findAll(@Request() req, @Query() paginationDto: PaginationDto) {
+        return this.tasksService.findAllByUser(
+            req.user.userId,
+            paginationDto.page,
+            paginationDto.limit,
+        );
     }
 
     @Get(':id')
