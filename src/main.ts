@@ -4,6 +4,11 @@ import { ValidationPipe } from '@nestjs/common';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { LoggingIntercptor } from './common/interceptors/logging.interceptor';
+// 确保 crypto 模块在全局可用
+import * as crypto from 'crypto';
+if (typeof globalThis.crypto === 'undefined') {
+  (globalThis as any).crypto = crypto;
+}
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
