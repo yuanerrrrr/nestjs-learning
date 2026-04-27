@@ -18,10 +18,13 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
+
+      - name: Verify nest CLI
+        run: npx @nestjs/cli --version
 
       - name: Build application
-        run: npx nest build
+        run: npx @nestjs/cli build
 
       - name: Deploy to server
         uses: appleboy/ssh-action@v1.0.3
