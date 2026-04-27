@@ -18,13 +18,12 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm install
-
-      - name: Verify nest CLI
-        run: npx @nestjs/cli --version
+        run: |
+          npm ci
+          ls -la node_modules/.bin/nest || echo "nest binary not found"
 
       - name: Build application
-        run: npx @nestjs/cli build
+        run: ./node_modules/.bin/nest build
 
       - name: Deploy to server
         uses: appleboy/ssh-action@v1.0.3
