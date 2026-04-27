@@ -7,6 +7,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TasksModule } from './tasks/tasks.module';
+import { WinstonModule } from 'nest-winston';
+import { winstonConfig } from './logger/winston.config';
 // 修复 crypto 未定义问题
 import * as crypto from 'crypto';
 if (typeof globalThis.crypto === 'undefined') {
@@ -15,6 +17,7 @@ if (typeof globalThis.crypto === 'undefined') {
 
 @Module({
   imports: [
+    WinstonModule.forRoot(winstonConfig),
     ConfigModule.forRoot({
       envFilePath: '.env', // 指定环境变量文件路径
       isGlobal: true,      // 全局配置，所有模块均可访问

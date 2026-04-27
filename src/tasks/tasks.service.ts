@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { Task, TaskStatus } from './task.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -10,9 +10,11 @@ export class TasksService {
     constructor(
         @InjectRepository(Task)
         private tasksRepository: Repository<Task>,
+        private readonly logger = new Logger('TasksService.name'),
     ) {}
 
     async createTask(userId: number, createTaskDto: CreateTaskDto): Promise<Task> {
+        this.logger.log(`Creating task for user ${userId}`);
         const task = this.tasksRepository.create({
             ...createTaskDto, // 扩展创建任务的数据
             user: {id: userId}, // 关联用户ID
