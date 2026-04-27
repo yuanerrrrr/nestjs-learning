@@ -15,16 +15,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
+          cache: 'npm'
 
       - name: Install dependencies
-        run: |
-          cd my-first-nest-app
-          npm ci
+        run: npm ci
 
       - name: Build application
-        run: |
-          cd my-first-nest-app
-          npm run build
+        run: npm run build
 
       - name: Deploy to server
         uses: appleboy/ssh-action@v1.0.3
