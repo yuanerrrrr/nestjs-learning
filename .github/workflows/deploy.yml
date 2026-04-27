@@ -21,7 +21,7 @@ jobs:
         run: npm ci
 
       - name: Build application
-        run: npm run build
+        run: npx nest build
 
       - name: Deploy to server
         uses: appleboy/ssh-action@v1.0.3
