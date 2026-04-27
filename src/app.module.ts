@@ -15,6 +15,12 @@ if (typeof globalThis.crypto === 'undefined') {
   (globalThis as any).crypto = crypto;
 }
 
+// 修复 crypto 未定义问题
+import * as crypto from 'crypto';
+if (typeof globalThis.crypto === 'undefined') {
+  (globalThis as any).crypto = crypto;
+}
+
 @Module({
   imports: [
     WinstonModule.forRoot(winstonConfig),
