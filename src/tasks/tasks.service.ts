@@ -7,10 +7,11 @@ import { UpdateTaskDto } from './dto/update-task.dto';
 
 @Injectable()
 export class TasksService {
+    private readonly logger = new Logger(TasksService.name);
+
     constructor(
         @InjectRepository(Task)
         private tasksRepository: Repository<Task>,
-        private readonly logger = new Logger('TasksService.name'),
     ) {}
 
     async createTask(userId: number, createTaskDto: CreateTaskDto): Promise<Task> {

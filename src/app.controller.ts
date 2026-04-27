@@ -1,6 +1,5 @@
 import { Controller, Get, Post, Delete } from '@nestjs/common';
 import { AppService } from './app.service';
-import { timestamp } from 'rxjs';
 
 @Controller()
 export class AppController {
