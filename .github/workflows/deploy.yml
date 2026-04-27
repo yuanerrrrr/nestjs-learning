@@ -17,10 +17,14 @@ jobs:
           node-version: '18'
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          cd my-first-nest-app
+          npm ci
 
       - name: Build application
-        run: npm run build
+        run: |
+          cd my-first-nest-app
+          npm run build
 
       - name: Deploy to server
         uses: appleboy/ssh-action@v1.0.3
