@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: nestjs-postgres
+    environment:
+      POSTGRES_DB: nest_demo
+      POSTGRES_USER: lisiyuan04
+      POSTGRES_PASSWORD: 123456
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lisiyuan04 -d nest_demo"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    image: nestjs-app:latest
+    container_name: nest-app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      JWT_SECRET: your-super-secret-key-change-this-in-production
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: lisiyuan04
+      DB_PASSWORD: 123456
+      DB_DATABASE: nest_demo
+    ports:
+      - "3001:3000"
+    restart: on-failure
+
+volumes:
+  postgres_data:
