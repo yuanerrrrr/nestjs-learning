@@ -19,11 +19,17 @@ jobs:
 
       - name: Install dependencies
         run: |
+          echo "Running npm ci..."
           npm ci
-          ls -la node_modules/.bin/nest || echo "nest binary not found"
+          echo "Listing node_modules/.bin:"
+          ls -la node_modules/.bin/ | head -20
+          echo "Checking for @nestjs/cli in node_modules:"
+          ls -la node_modules/@nestjs/ || echo "No @nestjs directory"
+          echo "Checking package-lock.json:"
+          grep -A 5 '"@nestjs/cli"' package-lock.json | head -10
 
       - name: Build application
-        run: ./node_modules/.bin/nest build
+        run: npm run build
 
       - name: Deploy to server
         uses: appleboy/ssh-action@v1.0.3
