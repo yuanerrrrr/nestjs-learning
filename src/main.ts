@@ -10,12 +10,6 @@ if (typeof globalThis.crypto === 'undefined') {
   (globalThis as any).crypto = crypto;
 }
 
-// 确保 crypto 模块在全局可用
-import * as crypto from 'crypto';
-if (typeof globalThis.crypto === 'undefined') {
-  (globalThis as any).crypto = crypto;
-}
-
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(
